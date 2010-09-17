@@ -2,8 +2,8 @@
 Gem::Specification.new do |s|
   s.name                  = 'capistrano-scope'
   s.rubyforge_project     = 'capistrano-scope'
-  s.homepage              = 'https://rubygems.org/gems/capistrano-scope'
-  s.version               = '0.0.6'
+  s.homepage              = 'http://github.com/kirtfitzpatrick/capistrano-scope'
+  s.version               = '0.0.8'
   s.summary               = 'Lightweight command line server selection for capistrano.'
   s.description           = 'If puppet were a Cadillac, capistrano-scope would be a bicycle.'
 

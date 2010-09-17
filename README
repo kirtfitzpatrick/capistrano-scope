@@ -1,3 +1,22 @@
+Lightweight command line server selection for capistrano.  Rather than having 
+to blast a task across all servers with a given role or as with
+multistage having to group all of your servers into separate files ahead of 
+time.  With this package you can pick groups or sub groups of servers or even 
+individual servers to execute tasks on via the command line.  For example:
+
+$ cap @:clienta:projectx:production:app:1 app:install_bundler
+$ cap @:clienta:projecty:all server:deploy_authorized_keys USERS='john_doe jane_doe'
+$ cap @:all nagios:nrpe:deploy
+
+Keep in mind that this offers additional functionality
+to capistrano and takes away nothing.  It can be used this in combination 
+with multistage and role based server and task definitions.
+
+
+From a config file perspective the only new functionality is the scope.server
+and scope.role methods.  From a command line persective all that has been 
+added is the @: namespace which contains all the server scope tasks.
+
 
 
 -------------------------------------------------------------------------
@@ -340,7 +359,11 @@ Servers:
 
 
 
-# Keep in mind through this that this offers additional functionality
-# to capistrano and takes away nothing.  You can still use the built in
-# server and role methods to define servers that you want for all commands
-# and you can use this in combination with multistage.
+= How it Works
+
+The implementation behind this is simple.  When the configuration is 
+loaded it generates tasks for each server and server group in memory.  Each of these
+tasks is not much more than a list of capistrano server and role method calls.
+When you call one of the scope tasks from the command line the task executes
+and the roles and servers are defined just in time for the next task on the 
+command line to execute on them.
