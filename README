@@ -63,31 +63,6 @@ scope.server 'clienta:projecty:production:db:1', '123.456.567.12'
 scope.server 'clienta:projecty:production:db:2', '123.456.567.13'
 
 
-scope.role :server, 'clienta:projectx:staging:lb:1'
-scope.role :server, 'clienta:projectx:staging:lb:2'
-scope.role :server, 'clienta:projectx:staging:app:1'
-scope.role :server, 'clienta:projectx:staging:app:2'
-scope.role :server, 'clienta:projectx:staging:db:1'
-scope.role :server, 'clienta:projectx:staging:db:2'
-scope.role :server, 'clienta:projectx:production:lb:1'
-scope.role :server, 'clienta:projectx:production:lb:2'
-scope.role :server, 'clienta:projectx:production:app:1'
-scope.role :server, 'clienta:projectx:production:app:2'
-scope.role :server, 'clienta:projectx:production:db:1'
-scope.role :server, 'clienta:projectx:production:db:2'
-scope.role :server, 'clienta:projecty:staging:lb:1'
-scope.role :server, 'clienta:projecty:staging:lb:2'
-scope.role :server, 'clienta:projecty:staging:app:1'
-scope.role :server, 'clienta:projecty:staging:app:2'
-scope.role :server, 'clienta:projecty:staging:db:1'
-scope.role :server, 'clienta:projecty:staging:db:2'
-scope.role :server, 'clienta:projecty:production:lb:1'
-scope.role :server, 'clienta:projecty:production:lb:2'
-scope.role :server, 'clienta:projecty:production:app:1'
-scope.role :server, 'clienta:projecty:production:app:2'
-scope.role :server, 'clienta:projecty:production:db:1'
-scope.role :server, 'clienta:projecty:production:db:2'
-
 scope.role :load_balancer, 'clienta:projectx:staging:lb:1'
 scope.role :load_balancer, 'clienta:projectx:staging:lb:2'
 scope.role :load_balancer, 'clienta:projectx:production:lb:1'
@@ -126,12 +101,12 @@ scope.role :db, 'clienta:projecty:production:db:2'
 
 namespace :server do
   desc "Concatenate Keys and upload new authorized_keys file to the server."
-  task :authorized_keys, :roles => :server do
+  task :authorized_keys do
     ...
   end
 
   desc "Install Subversion"
-  task :install_subversion, :roles => :server do
+  task :install_subversion do
     ...
   end
 end
@@ -325,7 +300,6 @@ Roles:
          app
          db
          load_balancer
-         server
 Servers:
          clienta:projectx:production:app:1
          clienta:projectx:production:app:2
@@ -351,7 +325,6 @@ $ cap @:clienta:projectx:staging:db:all @:show
   * executing `@:show'
 Roles:
          db
-         server
 Servers:
          clienta:projectx:staging:db:2
          clienta:projecty:staging:db:1
