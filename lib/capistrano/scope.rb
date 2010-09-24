@@ -6,6 +6,10 @@
 
 module Scope
   @@servers = Hash.new {|h,k| h[k] = {:ip_address => nil, :roles => [] } }
+  
+  def task_list
+    @@servers.keys.map {|key| "@:#{key}"}
+  end
 
   def role(role, server_name, options={})
     @@servers[server_name][:roles] << {:name => role, :options => options}
@@ -17,6 +21,7 @@ module Scope
 
   def create_task(name, pattern, ns)
     ns.task(name) do
+      set :current_scope, true
       keys = @@servers.keys.grep(/^#{pattern}/)
       
       keys.each do |key|
@@ -43,7 +48,7 @@ module Scope
   end
 
   # Execution starts here.
-  def create_role_tasks(ns)
+  def create_server_tasks(ns)
     @@servers.keys.each do |name| 
       namespace_task name.split(':').reverse, ns
     end
@@ -84,8 +89,9 @@ Capistrano.plugin :scope, Scope
 Capistrano::Configuration.instance.load do
   namespace '@'.to_sym do
 
-    task :create_role_tasks do
-      scope.create_role_tasks self
+    desc "[internal] create the scope tasks."
+    task :create_server_tasks do
+      scope.create_server_tasks self
     end
 
     desc "Scope all defined servers"
@@ -104,9 +110,22 @@ Capistrano::Configuration.instance.load do
         puts "         #{defined_server}"
       end
     end
+    
+    desc "[internal] Ensure that a stage has been selected."
+    task :ensure do
+      if !exists?(:current_scope)
+        if exists?(:default_scope)
+          logger.important "Defaulting to `#{default_scope}'"
+          find_and_execute_task(default_scope)
+        # else
+        #   abort "No scope specified. Please specify one of: #{stages.join(', ')} (e.g. `cap #{stages.first} #{ARGV.last}')"
+        end
+      end 
+    end
 
   end
 
-  on :load, '@:create_role_tasks'
+  on :load, '@:create_server_tasks'
+  on :start, '@:ensure', :except => scope.task_list + ['@:all', '@:create_server_tasks']
 end
 
