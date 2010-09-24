@@ -340,3 +340,10 @@ tasks is not much more than a list of capistrano server and role method calls.
 When you call one of the scope tasks from the command line the task executes
 and the roles and servers are defined just in time for the next task on the 
 command line to execute on them.
+
+
+= To Do
+
+* Define all roles as empty initially so tasks that mention them but do not need them won't error out.
+* Add an optional default task so that this might be able to play nice with multi-stage.
+
