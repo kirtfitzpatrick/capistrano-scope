@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.name                  = 'capistrano-scope'
   s.rubyforge_project     = 'capistrano-scope'
   s.homepage              = 'http://github.com/kirtfitzpatrick/capistrano-scope'
-  s.version               = '0.0.8'
+  s.version               = '0.1.1'
   s.summary               = 'Lightweight command line server selection for capistrano.'
   s.description           = 'If puppet were a Cadillac, capistrano-scope would be a bicycle.'
 
@@ -18,5 +18,5 @@ Gem::Specification.new do |s|
       '--main' << 'README' << '--line-numbers'
   s.extra_rdoc_files      = Dir['README']
 
-  s.add_dependency('capistrano', '2.5.18')
+  s.add_dependency('capistrano', '~> 2.5')
 end
