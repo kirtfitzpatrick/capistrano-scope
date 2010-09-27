@@ -60,9 +60,9 @@ groups by using the ":" separator.
 
 
 
-# For the sake of demonstration lets assume we also have the following tasks
-# defined and included from somewhere else.
-# -------------------------------------------------------------------------
+For the sake of demonstration lets assume we also have the following tasks
+defined and included from somewhere else.
+
 # recipes.rb
 
     namespace :server do
@@ -133,12 +133,11 @@ groups by using the ":" separator.
     end
 
 # end of recipes.rb
-# -------------------------------------------------------------------------
 
 
 
-# Now on the command line you can see the tasks that you normally would 
-# by listing out tasks with descriptions.
+Now on the command line you can see the tasks that you normally would 
+by listing out tasks with descriptions.
 
     $ cap -T
 
@@ -158,10 +157,10 @@ groups by using the ":" separator.
 
 
 
-# And if you want to see a list of all the server scopes that you have 
-# defined  use the verbose flag.  Since we used the '@' as the top level
-# namespace for our scoping tasks they should all sort to the top of the
-# list and then be followed by your normal capistrano tasks.
+And if you want to see a list of all the server scopes that you have 
+defined  use the verbose flag.  Since we used the '@' as the top level
+namespace for our scoping tasks they should all sort to the top of the
+list and then be followed by your normal capistrano tasks.
 
     $ cap -vT
 
@@ -205,35 +204,37 @@ groups by using the ":" separator.
 
 
 
-# Now to execute a task on a single server you can precede the task with the
-# scope task for that server.
+Now to execute a task on a single server you can precede the task with the
+scope task for that server.
 
     $ cap @:clienta:projectx:production:app:1 app:install_bundler
 
 
-# Or if you want to execute that task on a group of servers you can use the
-# all task that is defined for you at each level.
+Or if you want to execute that task on a group of servers you can use the
+all task that is defined for you at each level.
 
     $ cap @:clienta:projectx:production:app:all
 
 
-# Since we have added roles to our tasks and servers we can still execute
-# tasks on larger groups of servers that include servers that we don't want
-# the command to run on.  Because the task is role based it will only execute
-# the task on the correct servers.  For example if we wanted to install nginx
-# on all app servers of clientx but not clienty we could do this:
+Since we have added roles to our tasks and servers we can still 
+execute tasks on larger groups of servers that include servers 
+that we don't want the command to run on.  Because the task is 
+role based it will only execute the task on the correct servers.  
+For example if we wanted to install nginx on all app servers of 
+clientx but not clienty we could do this:
 
     $ cap @:clientx:all app:install_nginx
 
-# And if we really wanted to go global we can execute something across all
-# servers with the @:all scope.  Lets say we want to deploy they updated
-# nrpe config file and a new plugin we wrote to all our servers.
+And if we really wanted to go global we can execute something 
+across all servers with the @:all scope.  Lets say we want to 
+deploy they updated nrpe config file and a new plugin we wrote 
+to all our servers.
 
     $ cap @:all nagios:nrpe:deploy nagios:plugins:deploy
 
 
-# Included with this package is a @:show task that will list out all the
-# servers and roles that are defined for a given scope.
+Included with this package is a @:show task that will list out 
+all the servers and roles that are defined for a given scope.
 
     $ cap @:clienta:projectx:all @:show
 
