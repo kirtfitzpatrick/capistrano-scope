@@ -4,13 +4,9 @@ multistage having to group all of your servers into separate files ahead of
 time.  With this package you can pick groups or sub groups of servers or even 
 individual servers to execute tasks on via the command line.  For example:
 
-$ cap @:projectx:production:app:1 app:install_bundler
-$ cap @:projectx:all server:deploy_authorized_keys USERS='john_doe jane_doe'
-$ cap @:all nagios:nrpe:deploy
-
-Keep in mind that this offers additional functionality
-to capistrano and takes away nothing.  It can be used this in combination 
-with multistage and role based server and task definitions.
+    $ cap @:projectx:production:app:1 app:install_bundler
+    $ cap @:projectx:all server:deploy_authorized_keys USERS='john_doe jane_doe'
+    $ cap @:all nagios:nrpe:deploy
 
 
 From a config file perspective the only new functionality is the scope.server
@@ -22,43 +18,43 @@ added is the @: namespace which contains all the server scope tasks.
 -------------------------------------------------------------------------
 = Some config file (deploy.rb)
 
-require 'capistrano/scope'
+    require 'capistrano/scope'
 
-# Optional variable.  It'll use this one if none is specified on the command line.
-set :default_scope, '@:projectx:staging:all'
-
-
+    # Optional variable.  It'll use this one if none is specified on the command line.
+    set :default_scope, '@:projectx:staging:all'
 
 
-= clientx.rb capistrano config file
+
 
 The order you specify servers or roles doesn't matter, you can define
 scope.role for a server before you define scope.server or visa versa.
 You can give servers any name you like but they are broken into logical
 groups by using the ":" separator.
 
-scope.server 'projectx:staging:lb:1', '123.456.567.1'
-scope.server 'projectx:staging:app:1', '123.456.567.3'
-scope.server 'projectx:staging:app:2', '123.456.567.4'
-scope.server 'projectx:staging:db:1', '123.456.567.5'
+= clientx.rb capistrano config file
 
-scope.server 'projectx:production:lb:1', '123.456.567.7'
-scope.server 'projectx:production:app:1', '123.456.567.9'
-scope.server 'projectx:production:app:2', '123.456.567.10'
-scope.server 'projectx:production:app:3', '123.456.567.10'
-scope.server 'projectx:production:db:1', '123.456.567.12'
+    scope.server 'projectx:staging:lb:1', '123.456.567.1'
+    scope.server 'projectx:staging:app:1', '123.456.567.3'
+    scope.server 'projectx:staging:app:2', '123.456.567.4'
+    scope.server 'projectx:staging:db:1', '123.456.567.5'
+
+    scope.server 'projectx:production:lb:1', '123.456.567.7'
+    scope.server 'projectx:production:app:1', '123.456.567.9'
+    scope.server 'projectx:production:app:2', '123.456.567.10'
+    scope.server 'projectx:production:app:3', '123.456.567.10'
+    scope.server 'projectx:production:db:1', '123.456.567.12'
 
 
-scope.role :load_balancer, 'projectx:staging:lb:1'
-scope.role :load_balancer, 'projectx:production:lb:1'
+    scope.role :load_balancer, 'projectx:staging:lb:1'
+    scope.role :load_balancer, 'projectx:production:lb:1'
 
-scope.role :app, 'projectx:staging:app:1'
-scope.role :app, 'projectx:staging:app:2'
-scope.role :app, 'projectx:production:app:1'
-scope.role :app, 'projectx:production:app:2'
+    scope.role :app, 'projectx:staging:app:1'
+    scope.role :app, 'projectx:staging:app:2'
+    scope.role :app, 'projectx:production:app:1'
+    scope.role :app, 'projectx:production:app:2'
 
-scope.role :db, 'projectx:staging:db:1', :primary => true
-scope.role :db, 'projectx:production:db:1', :primary => true
+    scope.role :db, 'projectx:staging:db:1', :primary => true
+    scope.role :db, 'projectx:production:db:1', :primary => true
 
 
 
@@ -69,72 +65,72 @@ scope.role :db, 'projectx:production:db:1', :primary => true
 # -------------------------------------------------------------------------
 # recipes.rb
 
-namespace :server do
-  desc "Concatenate Keys and upload new authorized_keys file to the server."
-  task :authorized_keys do
-    ...
-  end
+    namespace :server do
+      desc "Concatenate Keys and upload new authorized_keys file to the server."
+      task :authorized_keys do
+        ...
+      end
 
-  desc "Install Subversion"
-  task :install_subversion do
-    ...
-  end
-end
-
-namespace :mysql do
-  desc "Backup Database"
-  task :backup, :roles => :db do
-    ...
-  end
-end
-
-namespace :app do
-  desc "Install bundler"
-  task :install_bundler, :roles => :app do
-    ...
-  end
-  
-  desc "Install nginx"
-  task :install_nginx, :roles => :app do
-    ...
-  end
-
-  desc "Install imagemagick"
-  task :install_imagemagick, :roles => :app do
-    ...
-  end
-end
-
-namespace :nagios do
-  desc "Update nagios config on the admin server and restart nagios service"
-  task :deploy, :roles => :admin do
-    ...
-  end
-
-  desc "Restart the nagios SMF Service"
-  task :restart, :roles => :admin do
-    ...
-  end
-  
-  namespace :nrpe do
-    desc "Install NRPE"
-    task :install, :roles => :server do
-      ...
+      desc "Install Subversion"
+      task :install_subversion do
+        ...
+      end
     end
-  
-    desc "Update NRPE Configuration"
-    task :deploy, :roles => :server do
-      ...
-    end
-  end
 
-  namespace :plugins do
-    desc "Copy plugins to servers"
-    task :deploy, :roles => :server do
-      ...
+    namespace :mysql do
+      desc "Backup Database"
+      task :backup, :roles => :db do
+        ...
+      end
     end
-  end
-end
+
+    namespace :app do
+      desc "Install bundler"
+      task :install_bundler, :roles => :app do
+        ...
+      end
+  
+      desc "Install nginx"
+      task :install_nginx, :roles => :app do
+        ...
+      end
+
+      desc "Install imagemagick"
+      task :install_imagemagick, :roles => :app do
+        ...
+      end
+    end
+
+    namespace :nagios do
+      desc "Update nagios config on the admin server and restart nagios service"
+      task :deploy, :roles => :admin do
+        ...
+      end
+
+      desc "Restart the nagios SMF Service"
+      task :restart, :roles => :admin do
+        ...
+      end
+  
+      namespace :nrpe do
+        desc "Install NRPE"
+        task :install, :roles => :server do
+          ...
+        end
+  
+        desc "Update NRPE Configuration"
+        task :deploy, :roles => :server do
+          ...
+        end
+      end
+
+      namespace :plugins do
+        desc "Copy plugins to servers"
+        task :deploy, :roles => :server do
+          ...
+        end
+      end
+    end
 
 # end of recipes.rb
 # -------------------------------------------------------------------------
@@ -144,21 +140,21 @@ end
 # Now on the command line you can see the tasks that you normally would 
 # by listing out tasks with descriptions.
 
-$ cap -T
+    $ cap -T
 
-cap @:all                                       # Scope all defined servers
-cap @:show                                      # Show the roles and servers ...
-cap app:install_bundler
-cap app:install_nginx
-cap app:install_image_magick
-cap mysql:backup
-cap nagios:deploy
-cap nagios:restart
-cap nagios:nrpe:install
-cap nagios:nrpe:deploy
-cap nagios:plugins:deploy
-cap server:authorized_keys
-cap server:install_subversion
+    cap @:all                                       # Scope all defined servers
+    cap @:show                                      # Show the roles and servers ...
+    cap app:install_bundler
+    cap app:install_nginx
+    cap app:install_image_magick
+    cap mysql:backup
+    cap nagios:deploy
+    cap nagios:restart
+    cap nagios:nrpe:install
+    cap nagios:nrpe:deploy
+    cap nagios:plugins:deploy
+    cap server:authorized_keys
+    cap server:install_subversion
 
 
 
@@ -167,44 +163,44 @@ cap server:install_subversion
 # namespace for our scoping tasks they should all sort to the top of the
 # list and then be followed by your normal capistrano tasks.
 
-$ cap -vT
+    $ cap -vT
 
-cap @:all                                       # Scope all defined servers
-cap @:clienta:all                               # 
-cap @:clienta:projectx:all                      # 
-cap @:clienta:projectx:production:all           # 
-cap @:clienta:projectx:production:app:1         # 
-cap @:clienta:projectx:production:app:2         # 
-cap @:clienta:projectx:production:app:all       # 
-cap @:clienta:projectx:production:db:1          # 
-cap @:clienta:projectx:production:db:2          # 
-cap @:clienta:projectx:production:db:all        # 
-cap @:clienta:projectx:production:lb:1          # 
-cap @:clienta:projectx:production:lb:2          # 
-cap @:clienta:projectx:production:lb:all        # 
-cap @:clienta:projectx:staging:all              # 
-cap @:clienta:projectx:staging:app:1            # 
-cap @:clienta:projectx:staging:app:2            # 
-cap @:clienta:projectx:staging:app:all          # 
-cap @:clienta:projectx:staging:db:1             # 
-cap @:clienta:projectx:staging:db:2             # 
-cap @:clienta:projectx:staging:db:all           # 
-cap @:clienta:projectx:staging:lb:1             # 
-cap @:clienta:projectx:staging:lb:2             # 
-cap @:clienta:projectx:staging:lb:all           # 
-cap @:create_role_tasks                         # 
-cap @:show                                      # Show the roles and servers ...
-cap app:install_bundler
-cap app:install_nginx
-cap app:install_image_magick
-cap mysql:backup
-cap nagios:deploy
-cap nagios:restart
-cap nagios:nrpe:install
-cap nagios:nrpe:deploy
-cap nagios:plugins:deploy
-cap server:authorized_keys
-cap server:install_subversion
+    cap @:all                                       # Scope all defined servers
+    cap @:clienta:all                               # 
+    cap @:clienta:projectx:all                      # 
+    cap @:clienta:projectx:production:all           # 
+    cap @:clienta:projectx:production:app:1         # 
+    cap @:clienta:projectx:production:app:2         # 
+    cap @:clienta:projectx:production:app:all       # 
+    cap @:clienta:projectx:production:db:1          # 
+    cap @:clienta:projectx:production:db:2          # 
+    cap @:clienta:projectx:production:db:all        # 
+    cap @:clienta:projectx:production:lb:1          # 
+    cap @:clienta:projectx:production:lb:2          # 
+    cap @:clienta:projectx:production:lb:all        # 
+    cap @:clienta:projectx:staging:all              # 
+    cap @:clienta:projectx:staging:app:1            # 
+    cap @:clienta:projectx:staging:app:2            # 
+    cap @:clienta:projectx:staging:app:all          # 
+    cap @:clienta:projectx:staging:db:1             # 
+    cap @:clienta:projectx:staging:db:2             # 
+    cap @:clienta:projectx:staging:db:all           # 
+    cap @:clienta:projectx:staging:lb:1             # 
+    cap @:clienta:projectx:staging:lb:2             # 
+    cap @:clienta:projectx:staging:lb:all           # 
+    cap @:create_role_tasks                         # 
+    cap @:show                                      # Show the roles and servers ...
+    cap app:install_bundler
+    cap app:install_nginx
+    cap app:install_image_magick
+    cap mysql:backup
+    cap nagios:deploy
+    cap nagios:restart
+    cap nagios:nrpe:install
+    cap nagios:nrpe:deploy
+    cap nagios:plugins:deploy
+    cap server:authorized_keys
+    cap server:install_subversion
 
 
 
@@ -212,13 +208,13 @@ cap server:install_subversion
 # Now to execute a task on a single server you can precede the task with the
 # scope task for that server.
 
-$ cap @:clienta:projectx:production:app:1 app:install_bundler
+    $ cap @:clienta:projectx:production:app:1 app:install_bundler
 
 
 # Or if you want to execute that task on a group of servers you can use the
 # all task that is defined for you at each level.
 
-$ cap @:clienta:projectx:production:app:all
+    $ cap @:clienta:projectx:production:app:all
 
 
 # Since we have added roles to our tasks and servers we can still execute
@@ -227,50 +223,48 @@ $ cap @:clienta:projectx:production:app:all
 # the task on the correct servers.  For example if we wanted to install nginx
 # on all app servers of clientx but not clienty we could do this:
 
-$ cap @:clientx:all app:install_nginx
+    $ cap @:clientx:all app:install_nginx
 
 # And if we really wanted to go global we can execute something across all
 # servers with the @:all scope.  Lets say we want to deploy they updated
 # nrpe config file and a new plugin we wrote to all our servers.
 
-$ cap @:all nagios:nrpe:deploy nagios:plugins:deploy
+    $ cap @:all nagios:nrpe:deploy nagios:plugins:deploy
 
 
 # Included with this package is a @:show task that will list out all the
 # servers and roles that are defined for a given scope.
 
-$ cap @:clienta:projectx:all @:show
+    $ cap @:clienta:projectx:all @:show
 
-    triggering load callbacks
-  * executing `@:create_role_tasks'
-  * executing `@:clienta:projectx:all'
-  * executing `@:show'
-Roles:
-         app
-         db
-         load_balancer
-Servers:
-         clienta:projectx:production:app:1
-         clienta:projectx:production:app:2
-         clienta:projectx:production:db:1
-         clienta:projectx:production:db:2
-         clienta:projectx:staging:app:1
-         clienta:projectx:staging:app:2
-         clienta:projectx:staging:db:2
-
-
+        triggering load callbacks
+      * executing `@:create_role_tasks'
+      * executing `@:clienta:projectx:all'
+      * executing `@:show'
+    Roles:
+             app
+             db
+             load_balancer
+    Servers:
+             clienta:projectx:production:app:1
+             clienta:projectx:production:app:2
+             clienta:projectx:production:db:1
+             clienta:projectx:production:db:2
+             clienta:projectx:staging:app:1
+             clienta:projectx:staging:app:2
+             clienta:projectx:staging:db:2
 
 
-$ cap @:clienta:projectx:staging:db:all @:show
+    $ cap @:clienta:projectx:staging:db:all @:show
 
-    triggering load callbacks
-  * executing `@:create_role_tasks'
-  * executing `@:clienta:projectx:staging:db:all'
-  * executing `@:show'
-Roles:
-         db
-Servers:
-         clienta:projectx:staging:db:2
+        triggering load callbacks
+      * executing `@:create_role_tasks'
+      * executing `@:clienta:projectx:staging:db:all'
+      * executing `@:show'
+    Roles:
+             db
+    Servers:
+             clienta:projectx:staging:db:2
 
 
 
