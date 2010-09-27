@@ -15,8 +15,7 @@ added is the @: namespace which contains all the server scope tasks.
 
 
 
--------------------------------------------------------------------------
-= Some config file (deploy.rb)
+== Some config file (deploy.rb)
 
     require 'capistrano/scope'
 
@@ -26,12 +25,13 @@ added is the @: namespace which contains all the server scope tasks.
 
 
 
+
+== clientx.rb capistrano config file
+
 The order you specify servers or roles doesn't matter, you can define
 scope.role for a server before you define scope.server or visa versa.
 You can give servers any name you like but they are broken into logical
 groups by using the ":" separator.
-
-= clientx.rb capistrano config file
 
     scope.server 'projectx:staging:lb:1', '123.456.567.1'
     scope.server 'projectx:staging:app:1', '123.456.567.3'
@@ -60,10 +60,10 @@ groups by using the ":" separator.
 
 
 
+== recipes.rb
 For the sake of demonstration lets assume we also have the following tasks
 defined and included from somewhere else.
 
-# recipes.rb
 
     namespace :server do
       desc "Concatenate Keys and upload new authorized_keys file to the server."
@@ -135,6 +135,8 @@ defined and included from somewhere else.
 # end of recipes.rb
 
 
+
+= Usage
 
 Now on the command line you can see the tasks that you normally would 
 by listing out tasks with descriptions.
